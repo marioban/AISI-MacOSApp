@@ -22,6 +22,7 @@ This SwiftUI-based iOS app allows users to manage a catalog of products efficien
   - **APIs**: RESTful APIs
 - **Other Tools**:
   - **Xcode**: For development and testing
+  - **VSCode**: API development
   - **MongoDB Atlas**: For database management
 
 ## Getting Started
