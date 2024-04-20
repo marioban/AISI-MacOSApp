@@ -39,7 +39,7 @@ public struct Product: Codable, Identifiable, Hashable {
 
 class APIManager {
     static let shared = APIManager()
-    private let baseURL = "http://172.20.10.11:3000/api/products"
+    private let baseURL = "http://localhost:3000/api/products"
     
     public func fetchProducts(completion: @escaping ([Product]?) -> Void) {
         guard let url = URL(string: self.baseURL) else {
