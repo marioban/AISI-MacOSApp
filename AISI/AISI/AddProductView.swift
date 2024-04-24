@@ -13,19 +13,37 @@ struct AddProductView: View {
     @State private var quantity = ""
     @State private var price = ""
     @EnvironmentObject var viewModel: ProductsViewModel
+    
+    private let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
 
     var body: some View {
         NavigationView {
             Form {
-                TextField("Product Name", text: $name)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                TextField("Quantity", text: $quantity)
-                TextField("Price", text: $price)
+                Section(header: Text("Add Product").fontWeight(.bold)) {
+                    TextField("Product Name", text: $name)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .font(.title2)
+                        .padding(.vertical, 10)
+                    TextField("Quantity", value: $quantity, formatter: numberFormatter)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.vertical, 10)
+                    TextField("Price", value: $price, formatter: numberFormatter)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.vertical, 10)
+                }
                 Button("Add") {
                     addProduct()
                 }
+                .buttonStyle(FilledButtonStyle())
+                .padding(.vertical, 10)
                 .disabled(name.isEmpty || quantity.isEmpty || price.isEmpty)
             }
+            .padding()
+            .frame(maxWidth: .infinity)
             .navigationTitle("Add Product")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -35,6 +53,8 @@ struct AddProductView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity)
+        .frame(width: 250, height: 320)
     }
     
     private func addProduct() {

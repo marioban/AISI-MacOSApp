@@ -11,42 +11,95 @@ struct EditProductView: View {
     @Binding var isPresented: Bool
     var onSave: (Product) -> Void
     var onCancel: () -> Void
-
-    // Editable state for product properties
+    
     @State private var draftName: String
     @State private var draftQuantity: Int
     @State private var draftPrice: Double
-
-    // The product's ID doesn't change, so it can be a constant
+    
     let productID: String
-
+    
+    private let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+    
     init(isPresented: Binding<Bool>, product: Product, onSave: @escaping (Product) -> Void, onCancel: @escaping () -> Void) {
         self._isPresented = isPresented
         self.onSave = onSave
         self.onCancel = onCancel
         self.productID = product.id ?? ""
-
-        // Initialize the local state with the product's current values
         _draftName = State(initialValue: product.name)
         _draftQuantity = State(initialValue: product.quantity)
         _draftPrice = State(initialValue: product.price)
     }
-
+    
     var body: some View {
         NavigationView {
             Form {
-                TextField("Product Name", text: $draftName)
-                TextField("Quantity", value: $draftQuantity, formatter: NumberFormatter())
-                TextField("Price", value: $draftPrice, formatter: NumberFormatter())
-
-                Button("Save") {
-                    // Use the constant `productID` to construct the updated product
-                    let updatedProduct = Product(id: productID, name: draftName, quantity: draftQuantity, price: draftPrice)
-                    onSave(updatedProduct)
+                Section(header: Text("Details").fontWeight(.bold)) {
+                    TextField("Product Name", text: $draftName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .font(.title2)
+                        .padding(.vertical, 10)
+                    TextField("Quantity", value: $draftQuantity, formatter: numberFormatter)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.vertical, 10)
+                    TextField("Price", value: $draftPrice, formatter: numberFormatter)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.vertical, 10)
                 }
-                Button("Cancel", action: onCancel)
+                
+                Section {
+                    Button("Save") {
+                        let updatedProduct = Product(id: productID, name: draftName, quantity: draftQuantity, price: draftPrice)
+                        onSave(updatedProduct)
+                        isPresented = false
+                    }
+                    .buttonStyle(FilledButtonStyle())
+                    .padding(.vertical, 10)
+                    
+                    Button("Cancel", action: onCancel)
+                        .buttonStyle(BorderlessButtonStyle())
+                        .padding(.vertical, 10)
+                }
             }
+            .padding()
+            .frame(maxWidth: .infinity)
             .navigationTitle("Edit Product")
+            .background(Color(.secondarySystemFill))
+        }
+        .frame(width: 300, height: 290)
+        .cornerRadius(12)
+        .shadow(radius: 10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray, lineWidth: 1)
+        )
+    }
+}
+
+
+// A custom button style for the Save button
+struct FilledButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+    }
+}
+
+
+// Add this View extension outside your `EditProductView` struct to make sure it's accessible globally.
+#if canImport(UIKit)
+extension View {
+    func dismissKeyboardOnTap() -> some View {
+        return self.onTapGesture {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         }
     }
 }
+#endif
