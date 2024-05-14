@@ -93,7 +93,7 @@ struct FilledButtonStyle: ButtonStyle {
 }
 
 
-// Add this View extension outside your `EditProductView` struct to make sure it's accessible globally.
+
 #if canImport(UIKit)
 extension View {
     func dismissKeyboardOnTap() -> some View {
