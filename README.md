@@ -1,7 +1,7 @@
 # Product Management App
 
 ## Overview
-This SwiftUI-based iOS app allows users to manage a catalog of products efficiently. It supports CRUD (Create, Read, Update, Delete) operations to handle products dynamically with real-time updates. The app integrates with a Node.js backend via RESTful APIs, ensuring seamless synchronization and robust data management capabilities.
+This SwiftUI-based MacOS app allows users to manage a catalog of products efficiently. It supports CRUD (Create, Read, Update, Delete) operations to handle products dynamically with real-time updates. The app integrates with a Node.js backend via RESTful APIs, ensuring seamless synchronization and robust data management capabilities.
 
 ## Features
 
